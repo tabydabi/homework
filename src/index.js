@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import firebase from "firebase";
 import { initializeApp } from "firebase/app";
-import 'firebase/auth'
+import { getAuth } from '@firebase/auth';
+// v9 compat packages are API compatible with v8 code
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 
 
-const firebaseConfig = {
+firebase.initializeApp(
+  {  
   apiKey: "AIzaSyAnh22xVkeLChOabQGRkIWBcBrvDkfQJLE",
   authDomain: "chat-react-7f901.firebaseapp.com",
   projectId: "chat-react-7f901",
@@ -14,16 +18,23 @@ const firebaseConfig = {
   messagingSenderId: "867056730751",
   appId: "1:867056730751:web:70040665fab1d2c215b54a",
   measurementId: "G-1TE97G85JE"
-};
+ }
+)
 
-const app = initializeApp(firebaseConfig);
+export const Context = createContext(null)
 
-const auth = app.auth();
+const auth = firebase.auth()
+const firestore = firebase.firestore()
+
 
 ReactDOM.render(
-  <React.StrictMode>
+  <Context.Provider value={{
+    firebase,
+    auth,
+    firestore,
+  }}>
     <App />
-  </React.StrictMode>,
+  </Context.Provider>,
   document.getElementById('root')
 );
 
